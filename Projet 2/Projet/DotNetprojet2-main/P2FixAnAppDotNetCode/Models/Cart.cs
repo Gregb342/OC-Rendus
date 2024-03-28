@@ -28,13 +28,24 @@ namespace P2FixAnAppDotNetCode.Models
         public void AddItem(Product product, int quantity)
         {
             // TODO implement the method
+            
         }
 
         /// <summary>
         /// Removes a product form the cart
         /// </summary>
-        public void RemoveLine(Product product) =>
-            GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);
+/*        GRB : J'ai remplacé cette écriture par une version "entre accolades" 
+ *        pour me faciliter la lecture du code.
+ *        public void RemoveLine(Product product) =>
+            GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);*/
+        public void RemoveLine(Product product)
+        {
+            GetCartLineList().RemoveAll(delegate (CartLine l)
+            {
+                return l.Product.Id == product.Id;
+            });
+        }
+
 
         /// <summary>
         /// Get total value of a cart
@@ -47,7 +58,7 @@ namespace P2FixAnAppDotNetCode.Models
 
         /// <summary>
         /// Get average value of a cart
-        /// </summary>
+        /// </summary> 
         public double GetAverageValue()
         {
             // TODO implement the method

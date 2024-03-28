@@ -42,13 +42,26 @@ namespace P2FixAnAppDotNetCode.Models
 
         }
 
+        /* GRB : Je crée une nouvelle méthode pour verifier les doublons
+         * dans la liste actuelle du panier, et les rassembler en une seule
+         * ligne */
+/*        public bool checkExistantItem(Product product, CartLine cartLine)
+        {
+            if (product.Id == cartLine.Product.Id) 
+            {
+                cartLine.Quantity += 1;
+                return true;
+            }
+            return false;
+        }
+*/
         /// <summary>
         /// Removes a product form the cart
         /// </summary>
-/*        GRB : J'ai remplacé cette écriture par une version "entre accolades" 
- *        pour me faciliter la lecture du code.
- *        public void RemoveLine(Product product) =>
-            GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);*/
+        /*        GRB : J'ai remplacé cette écriture par une version "entre accolades" 
+         *        pour me faciliter la lecture du code.
+         *        public void RemoveLine(Product product) =>
+                    GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);*/
         public void RemoveLine(Product product)
         {
             GetCartLineList().RemoveAll(delegate (CartLine l)
@@ -63,8 +76,14 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public double GetTotalValue()
         {
-            // TODO implement the method
-            return 0.0;
+            // DONE implement the method
+            double totalValue = 0;
+            GetCartLineList();
+            foreach (CartLine line in cartLines)
+            {
+                totalValue = line.Product.Price + totalValue;
+            }
+            return totalValue;
         }
 
         /// <summary>
@@ -72,8 +91,18 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary> 
         public double GetAverageValue()
         {
-            // TODO implement the method
-            return 0.0;
+            // DONE implement the method
+            int totalQuantiy = 0;
+            GetCartLineList();
+            foreach (CartLine line in cartLines)
+            {
+                totalQuantiy = line.Quantity + totalQuantiy;
+            }
+
+            double averageValue = 0;
+
+            averageValue = GetTotalValue() / totalQuantiy;
+            return averageValue;
         }
 
         /// <summary>

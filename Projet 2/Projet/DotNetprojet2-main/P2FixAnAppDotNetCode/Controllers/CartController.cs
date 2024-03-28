@@ -26,6 +26,8 @@ namespace P2FixAnAppDotNetCode.Controllers
         {
             Product product = _productService.GetProductById(id);
 
+            System.Diagnostics.Debug.WriteLine("Vlavlavla" + product.Name);
+
             if (product != null)
             {
                 _cart.AddItem(product, 1);

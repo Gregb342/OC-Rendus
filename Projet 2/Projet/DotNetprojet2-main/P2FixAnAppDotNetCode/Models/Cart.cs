@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace P2FixAnAppDotNetCode.Models
@@ -17,9 +18,10 @@ namespace P2FixAnAppDotNetCode.Models
         /// Return the actual cartline list
         /// </summary>
         /// <returns></returns>
+        private List<CartLine> cartLines = new List<CartLine>();
         private List<CartLine> GetCartLineList()
         {
-            return new List<CartLine>();
+            return cartLines;
         }
 
         /// <summary>
@@ -28,7 +30,16 @@ namespace P2FixAnAppDotNetCode.Models
         public void AddItem(Product product, int quantity)
         {
             // TODO implement the method
-            
+            CartLine newCartLine = new CartLine();
+            newCartLine.Product = product;
+            newCartLine.Quantity = quantity;
+            newCartLine.OrderLineId = GetCartLineList().Count + 1;
+
+            List<CartLine> cartLines = GetCartLineList();
+            cartLines.Add(newCartLine);
+
+            System.Diagnostics.Debug.WriteLine("boubou : {newCartLine.Product.Name} ");
+
         }
 
         /// <summary>

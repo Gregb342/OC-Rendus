@@ -9,6 +9,8 @@ namespace P2FixAnAppDotNetCode.Models
     /// </summary>
     public class Cart : ICart
     {
+        private List<CartLine> cartLines = new List<CartLine>();
+
         /// <summary>
         /// Read-only property for display only
         /// </summary>
@@ -17,8 +19,7 @@ namespace P2FixAnAppDotNetCode.Models
         /// <summary>
         /// Return the actual cartline list
         /// </summary>
-        /// <returns></returns>
-        private List<CartLine> cartLines = new List<CartLine>();
+        /// <returns>List</returns>
         private List<CartLine> GetCartLineList()
         {
             return cartLines;
@@ -29,32 +30,44 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>//
         public void AddItem(Product product, int quantity)
         {
-            // TODO implement the method
-            CartLine newCartLine = new CartLine();
-            newCartLine.Product = product;
-            newCartLine.Quantity = quantity;
-            newCartLine.OrderLineId = GetCartLineList().Count + 1;
-
-            List<CartLine> cartLines = GetCartLineList();
-            cartLines.Add(newCartLine);
-
-            System.Diagnostics.Debug.WriteLine("boubou : {newCartLine.Product.Name} ");
-
-        }
-
-        /* GRB : Je crée une nouvelle méthode pour verifier les doublons
-         * dans la liste actuelle du panier, et les rassembler en une seule
-         * ligne */
-/*        public bool checkExistantItem(Product product, CartLine cartLine)
-        {
-            if (product.Id == cartLine.Product.Id) 
+            // GRB : On vérifie que la quantité donnée est supérieur à 0
+            if (quantity <= 0)
             {
-                cartLine.Quantity += 1;
-                return true;
+                throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
             }
-            return false;
+
+            // GRB : On récupere le panier actuel, qui a été intialisé avec la classe.
+            List<CartLine> currentCartLines = GetCartLineList();
+                        
+            /* GRB : On utilise la méthode "FindProductInCartLines()" pour comparer
+             * l'ID du produit ajouté avec les ID des produits déjà existant, ce qui
+             * retourne l'objet de type Produit déjà existant dans le panier. */
+            Product lineProduct = FindProductInCartLines(product.Id);
+
+            /* GRB : Si le produit lineProduct n'est pas nul, on augmente la valeur de la 
+             * quantité du produit dans le panier.
+             * A suivre : Réduire le stock actuel du produit à l'ajout. */             
+            if (lineProduct != null)
+            {
+                /* GRB : On cherche la ligne correspondante du panier
+                * en utilisant la méthode "FirstOrDefault" de LINQ */
+                CartLine existingLine = cartLines.FirstOrDefault(line => line.Product.Id == product.Id);
+                existingLine.Quantity += quantity;
+            }
+            else
+            {
+                /* GRB : Si le lineProduct est nul, cela veut dire que le produit n'existe
+                 * pas encore dans le panier, on peut donc créer une nouvelle
+                 * ligne avec les informations necessaires */
+                CartLine newCartLine = new CartLine();
+                newCartLine.Product = product;
+                newCartLine.Quantity = quantity;
+                newCartLine.OrderLineId = currentCartLines.Count + 1;
+                cartLines.Add(newCartLine);
+            }                            
         }
-*/
+
+
         /// <summary>
         /// Removes a product form the cart
         /// </summary>
@@ -64,45 +77,59 @@ namespace P2FixAnAppDotNetCode.Models
                     GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);*/
         public void RemoveLine(Product product)
         {
-            GetCartLineList().RemoveAll(delegate (CartLine l)
+            GetCartLineList().RemoveAll(l =>
             {
                 return l.Product.Id == product.Id;
             });
         }
 
-
+        
         /// <summary>
         /// Get total value of a cart
         /// </summary>
         public double GetTotalValue()
         {
-            // DONE implement the method
+
             double totalValue = 0;
             GetCartLineList();
             foreach (CartLine line in cartLines)
             {
-                totalValue = line.Product.Price + totalValue;
+                totalValue = (line.Product.Price*line.Quantity) + totalValue;
             }
-            return totalValue;
+
+            if (totalValue > 0)
+            {
+                return totalValue;
+            }
+
+            return 0;
         }
+
+
 
         /// <summary>
         /// Get average value of a cart
         /// </summary> 
         public double GetAverageValue()
         {
-            // DONE implement the method
             int totalQuantiy = 0;
-            GetCartLineList();
+
+            double averageValue = 0;
+
             foreach (CartLine line in cartLines)
             {
                 totalQuantiy = line.Quantity + totalQuantiy;
             }
 
-            double averageValue = 0;
-
             averageValue = GetTotalValue() / totalQuantiy;
-            return averageValue;
+
+            if (averageValue > 0)
+            {
+                return averageValue;
+            }
+
+            return 0;
+            
         }
 
         /// <summary>
@@ -110,13 +137,21 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public Product FindProductInCartLines(int productId)
         {
-            // TODO implement the method
-            return null;
+            foreach (CartLine line in cartLines)
+            {
+                if (productId == line.Product.Id)
+                {
+                    return line.Product;
+                }
+            }
+                return null;
         }
 
         /// <summary>
         /// Get a specific cartline by its index
         /// </summary>
+        // GRB : Je n'ai pas compris l'utilité de cette méthode,
+        // je suppose que j'ai fait différemment
         public CartLine GetCartLineByIndex(int index)
         {
             return Lines.ToArray()[index];

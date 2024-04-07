@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace P2FixAnAppDotNetCode.Models.Repositories
@@ -56,13 +57,26 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
         /// </summary>
         public void UpdateProductStocks(int productId, int quantityToRemove)
         {
-            Product product = _products.First(p => p.Id == productId);
-            product.Stock = product.Stock - quantityToRemove;
-
-            if (product.Stock == 0)
-                _products.Remove(product);
+            try
+            {
+                Product product = _products.First(p => p.Id == productId);
+                // GRB : Ajout d'une vérification que la quantité soit bien supérieure à 0
+                // et ne soit pas supérieur à la quantité en stock actuelle.
+                if (quantityToRemove > 0 && quantityToRemove <= product.Stock)
+                {
+                    product.Stock = product.Stock - quantityToRemove;
+                }
+                else
+                {
+                    throw new ArgumentException("La quantité à retirer doit être supérieure à zéro et inférieure ou égale au stock actuel.");
+                }
+                if (product.Stock == 0)
+                    _products.Remove(product);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException("Le product n'existe pas.");
+            }     
         }
-
-
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Localization;
 
 namespace P2FixAnAppDotNetCode.Models
 {
@@ -13,6 +14,7 @@ namespace P2FixAnAppDotNetCode.Models
         public ICollection<CartLine> Lines { get; set; }
 
         [Required(ErrorMessage = "ErrorMissingName")]
+        
         public string Name { get; set; }
 
         [Required(ErrorMessage = "ErrorMissingAddress")]
@@ -21,6 +23,7 @@ namespace P2FixAnAppDotNetCode.Models
         [Required(ErrorMessage = "ErrorMissingCity")]
         public string City { get; set; }
 
+        [Required(ErrorMessage = "ErrorMissingZip")]
         public string Zip { get; set; }
 
         [Required(ErrorMessage = "ErrorMissingCountry")]

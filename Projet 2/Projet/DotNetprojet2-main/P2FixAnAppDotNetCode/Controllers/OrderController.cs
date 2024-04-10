@@ -19,14 +19,27 @@ namespace P2FixAnAppDotNetCode.Controllers
             _localizer = localizer;
         }
 
-        public ViewResult Index() => View(new Order());
+        public IActionResult Index()
+        {
+            /*GRB : Modification de la méthode pour renvoyer vers les produits
+             * si le panier est vide, avec affichage du message d'erreur correspondant.*/
+            if (!((Cart)_cart).Lines.Any())
+            {
+                ModelState.AddModelError("", _localizer["CartEmpty"]);
+                return RedirectToAction("Index", "Product");
+            }
 
+            return View(new Order());
+        }
+            
+         
         [HttpPost]
         public IActionResult Index(Order order)
         {
             if (!((Cart) _cart).Lines.Any())
             {
                 ModelState.AddModelError("", _localizer["CartEmpty"]);
+                return RedirectToAction("Index", "Product");
             }
             if (ModelState.IsValid)
             {

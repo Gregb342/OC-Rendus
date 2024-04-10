@@ -30,41 +30,43 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>//
         public void AddItem(Product product, int quantity)
         {
-            // GRB : On vérifie que la quantité donnée est supérieur à 0
-            if (quantity <= 0)
-            {
-                throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
-            }
 
-            // GRB : On récupere le panier actuel, qui a été intialisé avec la classe.
-            List<CartLine> currentCartLines = GetCartLineList();
-                        
-            /* GRB : On utilise la méthode "FindProductInCartLines()" pour comparer
-             * l'ID du produit ajouté avec les ID des produits déjà existant, ce qui
-             * retourne l'objet de type Produit déjà existant dans le panier. */
-            Product lineProduct = FindProductInCartLines(product.Id);
+                // GRB : On vérifie que la quantité donnée est supérieur à 0
+                if (quantity <= 0)
+                {
+                    throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
+                }
 
-            /* GRB : Si le produit lineProduct n'est pas nul, on augmente la valeur de la 
-             * quantité du produit dans le panier.
-             * A suivre : Réduire le stock actuel du produit à l'ajout. */             
-            if (lineProduct != null)
-            {
-                /* GRB : On cherche la ligne correspondante du panier
-                * en utilisant la méthode "FirstOrDefault" de LINQ */
-                CartLine existingLine = cartLines.FirstOrDefault(line => line.Product.Id == product.Id);
-                existingLine.Quantity += quantity;
-            }
-            else
-            {
-                /* GRB : Si le lineProduct est nul, cela veut dire que le produit n'existe
-                 * pas encore dans le panier, on peut donc créer une nouvelle
-                 * ligne avec les informations necessaires */
-                CartLine newCartLine = new CartLine();
-                newCartLine.Product = product;
-                newCartLine.Quantity = quantity;
-                newCartLine.OrderLineId = currentCartLines.Count + 1;
-                cartLines.Add(newCartLine);
-            }                            
+                // GRB : On récupere le panier actuel, qui a été intialisé avec la classe.
+                List<CartLine> currentCartLines = GetCartLineList();
+
+                /* GRB : On utilise la méthode "FindProductInCartLines()" pour comparer
+                 * l'ID du produit ajouté avec les ID des produits déjà existant, ce qui
+                 * retourne l'objet de type Produit déjà existant dans le panier. */
+                Product lineProduct = FindProductInCartLines(product.Id);
+
+                /* GRB : Si le produit lineProduct n'est pas nul, on augmente la valeur de la 
+                 * quantité du produit dans le panier.
+                 * A suivre : Réduire le stock actuel du produit à l'ajout. */
+                if (lineProduct != null)
+                {
+                    /* GRB : On cherche la ligne correspondante du panier
+                    * en utilisant la méthode "FirstOrDefault" de LINQ */
+                    CartLine existingLine = cartLines.FirstOrDefault(line => line.Product.Id == product.Id);
+                    existingLine.Quantity += quantity;
+                }
+                else
+                {
+                    /* GRB : Si le lineProduct est nul, cela veut dire que le produit n'existe
+                     * pas encore dans le panier, on peut donc créer une nouvelle
+                     * ligne avec les informations necessaires */
+                    CartLine newCartLine = new CartLine();
+                    newCartLine.Product = product;
+                    newCartLine.Quantity = quantity;
+                    newCartLine.OrderLineId = currentCartLines.Count + 1;
+                    cartLines.Add(newCartLine);
+                }
+                                  
         }
 
 

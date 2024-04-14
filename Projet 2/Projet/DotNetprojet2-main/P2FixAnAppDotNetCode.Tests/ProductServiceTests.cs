@@ -52,7 +52,7 @@ namespace P2FixAnAppDotNetCode.Tests
             //here testing that product stock values are decreasing for each cart checkout, not just a single time
             cart = new Cart();
             // GRB : Je pense que le probleme de ce test vient du fait qu'on ré-initialise
-            // productRepostory, alors que les valeurs attendues sont basées sur
+            // productRepository, alors que les valeurs attendues sont basées sur
             // une mise à jour par rapport aux modifications précédentes.
 /*            productRepository = new ProductRepository();*/
             productService = new ProductService(productRepository, orderRepository);

@@ -30,9 +30,9 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>//
         public void AddItem(Product product, int quantity)
         {
+            // TODO : DONE implement the method
 
-                // GRB : On vérifie que la quantité donnée est supérieur à 0
-                if (quantity <= 0)
+            if (quantity <= 0)
                 {
                     throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
                 }
@@ -45,9 +45,6 @@ namespace P2FixAnAppDotNetCode.Models
                  * retourne l'objet de type Produit déjà existant dans le panier. */
                 Product lineProduct = FindProductInCartLines(product.Id);
 
-                /* GRB : Si le produit lineProduct n'est pas nul, on augmente la valeur de la 
-                 * quantité du produit dans le panier.
-                 * A suivre : Réduire le stock actuel du produit à l'ajout. */
                 if (lineProduct != null)
                 {
                     /* GRB : On cherche la ligne correspondante du panier
@@ -73,25 +70,16 @@ namespace P2FixAnAppDotNetCode.Models
         /// <summary>
         /// Removes a product form the cart
         /// </summary>
-        /*        GRB : J'ai remplacé cette écriture par une version "entre accolades" 
-         *        pour me faciliter la lecture du code.
-         *        public void RemoveLine(Product product) =>
-                    GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);*/
-        public void RemoveLine(Product product)
-        {
-            GetCartLineList().RemoveAll(l =>
-            {
-                return l.Product.Id == product.Id;
-            });
-        }
+        public void RemoveLine(Product product) =>
+                    GetCartLineList().RemoveAll(l => l.Product.Id == product.Id);
 
-        
+
         /// <summary>
         /// Get total value of a cart
         /// </summary>
         public double GetTotalValue()
         {
-
+            // TODO : DONE implement the method
             double totalValue = 0;
             GetCartLineList();
             foreach (CartLine line in cartLines)
@@ -114,6 +102,7 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary> 
         public double GetAverageValue()
         {
+            // TODO : DONE implement the method
             int totalQuantiy = 0;
 
             double averageValue = 0;
@@ -139,6 +128,7 @@ namespace P2FixAnAppDotNetCode.Models
         /// </summary>
         public Product FindProductInCartLines(int productId)
         {
+            // TODO : DONE implement the method
             foreach (CartLine line in cartLines)
             {
                 if (productId == line.Product.Id)
@@ -152,8 +142,7 @@ namespace P2FixAnAppDotNetCode.Models
         /// <summary>
         /// Get a specific cartline by its index
         /// </summary>
-        // GRB : Je n'ai pas compris l'utilité de cette méthode,
-        // je suppose que j'ai fait différemment
+
         public CartLine GetCartLineByIndex(int index)
         {
             return Lines.ToArray()[index];

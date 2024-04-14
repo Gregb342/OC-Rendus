@@ -1,1 +1,3 @@
+La derniere version du code correspond au dernier commit de la branch main :
+
 https://github.com/Gregb342/OC-Rendus/tree/main/Projet%202
